@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Day Predictor AI</title>
+
+<style>
+body{
+  background:#f7cddb;
+  font-family:Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
+}
+
+.card{
+  background:white;
+  padding:25px;
+  border-radius:18px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
+  width:340px;
+}
+
+.days button{
+  width:45%;
+  margin:5px;
+  padding:8px;
+  border-radius:10px;
+  border:1px solid #bbb;
+  cursor:pointer;
+}
+
+.days button.active{
+  background:#ff6fa8;
+  color:white;
+}
+
+#predict{
+  margin-top:15px;
+  padding:10px;
+  width:100%;
+  border:none;
+  border-radius:10px;
+  background:#ff3f83;
+  color:white;
+  cursor:pointer;
+  font-size:15px;
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.loaderBox{
+  background:white;
+  padding:25px;
+  border-radius:16px;
+  text-align:center;
+  width:260px;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+  transition:background 1s ease, color .5s ease;
+}
+
+.spinner{
+  width:40px;
+  height:40px;
+  border:5px solid #ddd;
+  border-top:5px solid #ff3f83;
+  border-radius:50%;
+  margin:0 auto 15px;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  from{transform:rotate(0);}
+  to{transform:rotate(360deg);}
+}
+
+.bar{
+  height:10px;
+  width:100%;
+  border-radius:10px;
+  background:#eee;
+  margin-top:10px;
+  overflow:hidden;
+}
+
+.bar div{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg, red, orange, yellow, lime, cyan, blue, magenta, red);
+  background-size:300% 100%;
+  animation:rgbFlow 2s linear infinite;
+  transition:width .2s linear;
+}
+
+@keyframes rgbFlow{
+  from{background-position:0% 0;}
+  to{background-position:100% 0;}
+}
+
+.gifMode{
+  animation:fadeGif 1s forwards;
+}
+
+@keyframes fadeGif{
+  from{opacity:.3;}
+  to{opacity:1;}
+}
+
+#final{
+  font-weight:bold;
+  font-size:18px;
+  margin-top:15px;
+  text-shadow:0 0 8px rgba(0,0,0,.7);
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>Day Predictor AI 🤖</h2>
+  <p>Select today:</p>
+
+  <div class="days">
+    <button onclick="pick(0)">Monday</button>
+    <button onclick="pick(1)">Tuesday</button>
+    <button onclick="pick(2)">Wednesday</button>
+    <button onclick="pick(3)">Thursday</button>
+    <button onclick="pick(4)">Friday</button>
+    <button onclick="pick(5)">Saturday</button>
+    <button onclick="pick(6)">Sunday</button>
+  </div>
+
+  <button id="predict" onclick="start()">PREDICT 🚀</button>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="loaderBox" id="box">
+    <div class="spinner" id="spin"></div>
+
+    <p id="msg">Contacting NASA satellites… 🛰️</p>
+
+    <div class="bar"><div id="barFill"></div></div>
+
+    <p id="final"></p>
+  </div>
+</div>
+
+<script>
+let today = null;
+const buttons = document.querySelectorAll(".days button");
+
+function pick(n){
+  today = n;
+  buttons.forEach(b=>b.classList.remove("active"));
+  buttons[n].classList.add("active");
+}
+
+function start(){
+  if(today===null){
+    alert("Pick a day first.");
+    return;
+  }
+
+  document.getElementById("overlay").style.display="flex";
+
+  const msgs = [
+    "Contacting NASA satellites… 🛰️",
+    "Connecting to Nikita Madam… 👩‍🏫",
+    "Calling Elon Musk on WhatsApp… 📞",
+    "Getting Info from Astrologers… 🔭",
+    "Hacking time machine… ⏳",
+    "The final prediction is being calculated… 🧮",
+    "Reading your mind… 🧠",
+    "Finalizing prediction… 🔮"
+  ];
+
+  const msgTag = document.getElementById("msg");
+  const bar = document.getElementById("barFill");
+  const final = document.getElementById("final");
+  const box = document.getElementById("box");
+  const spinner = document.getElementById("spin");
+
+  final.textContent = "";
+  msgTag.style.display = "block";
+  bar.style.width = "0%";
+
+  let i = 0;
+  let progress = 0;
+
+  const m = setInterval(()=>{
+
+    progress += 1;
+    bar.style.width = progress + "%";
+
+    if(progress % 15 === 0 && i < msgs.length){
+      msgTag.textContent = msgs[i++];
+    }
+
+    if(progress >= 100){
+      clearInterval(m);
+
+      msgTag.style.display = "none";
+      spinner.style.display = "none";
+
+      final.textContent = "2026 mein to duniya khatam hai 😂";
+
+   
+      box.style.background =
+        "url('https://media1.tenor.com/m/HvdmbCyGlxQAAAAd/26-me-to-dunya-khatam-hai.gif')";
+      box.style.backgroundSize = "cover";
+      box.style.backgroundPosition = "center";
+
+      box.style.color = "white";
+
+    
+      box.classList.add("gifMode");
+    }
+
+  },100);
+}
+</script>
+
+</body>
+</html>
